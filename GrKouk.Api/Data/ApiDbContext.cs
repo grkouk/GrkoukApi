@@ -14,5 +14,6 @@ namespace GrKouk.Api.Data
             
         }
         public DbSet<Facility> Facilities { get; set; }
+        public DbSet<RoomQuoteRequest> RoomQuoteRequests { get; set; }
     }
 }
