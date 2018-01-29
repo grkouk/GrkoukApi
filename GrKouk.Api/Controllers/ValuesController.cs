@@ -3,17 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GrKouk.Api.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private readonly ILogger _logger;
+
+        public ValuesController(ILogger<ValuesController> logger)
+        {
+            _logger = logger;
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            string referer = Request.Headers["Referer"].ToString();
+            var remoteIp = HttpContext.Connection.RemoteIpAddress;
+            _logger.LogInformation("Referer value = " + referer);
+            _logger.LogInformation("Calling ip value = " + remoteIp);
+            return new string[] { referer, remoteIp.ToString(),"value1", "value2" };
         }
 
         // GET api/values/5

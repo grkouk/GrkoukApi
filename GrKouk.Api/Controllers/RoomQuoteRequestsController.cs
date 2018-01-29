@@ -9,6 +9,7 @@ using GrKouk.Api.Data;
 using GrKouk.Api.Models;
 using GrKouk.Api.Services;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Logging;
 
 namespace GrKouk.Api.Controllers
 {
@@ -18,17 +19,18 @@ namespace GrKouk.Api.Controllers
     {
         private readonly ApiDbContext _context;
         private readonly IEmailSender _emailSender;
+        //private readonly ILogger<RoomQuoteRequestsController> _logger;
 
         public RoomQuoteRequestsController(ApiDbContext context, IEmailSender emailSender)
         {
             _context = context;
             _emailSender = emailSender;
+            //_logger = logger;
         }
 
         // GET: api/RoomQuoteRequests
         [HttpGet]
-        [DisableCors]
-        public IEnumerable<RoomQuoteRequest> GetRoomQuoteRequests()
+      public IEnumerable<RoomQuoteRequest> GetRoomQuoteRequests()
         {
             return _context.RoomQuoteRequests;
         }
@@ -91,6 +93,11 @@ namespace GrKouk.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostRoomQuoteRequest([FromBody] RoomQuoteRequest roomQuoteRequest)
         {
+            //string referer = Request.Headers["Referer"].ToString();
+            //var remoteIp = HttpContext.Connection.RemoteIpAddress;
+            //_logger.LogInformation("Referer value = " + referer);
+            //_logger.LogInformation("Calling ip value = " + remoteIp);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

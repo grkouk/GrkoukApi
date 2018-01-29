@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using GrKouk.Api.Data;
 using GrKouk.Api.Services;
 using Microsoft.AspNetCore.Builder;
@@ -38,20 +39,42 @@ namespace GrKouk.Api
                     {
                         builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
                     });
-                options.AddPolicy("AllowSpecificOrigins",
-                    builder =>
-                    {
-                        builder.WithOrigins("http://villakoukoudis.com", "http://potos.tours",
-                            "http://thassos-rent-a-bike.com");
-                    });
+                //options.AddPolicy("AllowSpecificOrigins",
+                //    builder =>
+                //    {
+                //        builder.WithOrigins( "http://potos.tours",
+                //            "http://thassos-rent-a-bike.com").AllowAnyMethod().AllowAnyHeader();
+                //    });
             });
+
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>(options =>
+                {
+                    options.GeneralRules = new System.Collections.Generic.List<RateLimitRule>()
+                    {
+                        new RateLimitRule()
+                        {
+
+                            Endpoint = "*",
+                            Limit = 30,
+                            Period = "1m"
+                        }
+                    };
+                    options.EnableEndpointRateLimiting = true;
+                }
+                );
+
+
 
             services.AddDbContext<ApiDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
 
             // Add application services.
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +87,10 @@ namespace GrKouk.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("AllowSpecificOrigins");
+
+            app.UseCors("AllowAllOrigins");
+            app.UseIpRateLimiting();
+            
             app.UseMvc();
         }
     }
