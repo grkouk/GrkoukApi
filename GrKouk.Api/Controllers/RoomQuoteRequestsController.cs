@@ -93,17 +93,14 @@ namespace GrKouk.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostRoomQuoteRequest([FromBody] RoomQuoteRequest roomQuoteRequest)
         {
-            //string referer = Request.Headers["Referer"].ToString();
-            //var remoteIp = HttpContext.Connection.RemoteIpAddress;
-            //_logger.LogInformation("Referer value = " + referer);
-            //_logger.LogInformation("Calling ip value = " + remoteIp);
-
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             roomQuoteRequest.RequestDate=DateTime.Today;
             _context.RoomQuoteRequests.Add(roomQuoteRequest);
+
             await _context.SaveChangesAsync();
             var _emailTo = "info@villakoukoudis.com";
 

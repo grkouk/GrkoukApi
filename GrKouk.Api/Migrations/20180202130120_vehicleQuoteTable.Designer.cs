@@ -8,31 +8,14 @@ using GrKouk.Api.Data;
 namespace GrKouk.Api.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180202130120_vehicleQuoteTable")]
+    partial class vehicleQuoteTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GrKouk.Api.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(15);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-                });
 
             modelBuilder.Entity("GrKouk.Api.Models.Facility", b =>
                 {
@@ -94,75 +77,6 @@ namespace GrKouk.Api.Migrations
                     b.ToTable("RoomQuoteRequests");
                 });
 
-            modelBuilder.Entity("GrKouk.Api.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("AmountFpa");
-
-                    b.Property<decimal>("AmountNet");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500);
-
-                    b.Property<string>("ReferenceCode");
-
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<DateTime>("TransactionDate");
-
-                    b.Property<int>("TransactorId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactorId");
-
-                    b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("GrKouk.Api.Models.Transactor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("City")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(15);
-
-                    b.Property<string>("EMail")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("PhoneFax")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("PhoneMobile")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("PhoneWork")
-                        .HasMaxLength(200);
-
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<int?>("Zip");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Transactors");
-                });
-
             modelBuilder.Entity("GrKouk.Api.Models.VehicleQuoteRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -195,13 +109,6 @@ namespace GrKouk.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VehicleQuoteRequests");
-                });
-
-            modelBuilder.Entity("GrKouk.Api.Models.Transaction", b =>
-                {
-                    b.HasOne("GrKouk.Api.Models.Transactor", "Transactor")
-                        .WithMany()
-                        .HasForeignKey("TransactorId");
                 });
         }
     }

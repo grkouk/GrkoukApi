@@ -8,9 +8,10 @@ using GrKouk.Api.Data;
 namespace GrKouk.Api.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180211114518_TransactionsLogEntities")]
+    partial class TransactionsLogEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
@@ -107,10 +108,6 @@ namespace GrKouk.Api.Migrations
                         .HasMaxLength(500);
 
                     b.Property<string>("ReferenceCode");
-
-                    b.Property<byte[]>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<DateTime>("TransactionDate");
 
