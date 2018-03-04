@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GrKouk.Api.Data;
+using GrKouk.Api.DTOs;
 using GrKouk.Api.Models;
 
 namespace GrKouk.Api.Controllers
@@ -23,9 +26,10 @@ namespace GrKouk.Api.Controllers
 
         // GET: api/Transactions
         [HttpGet]
-        public IEnumerable<Transaction> GetTransactions()
+        public IEnumerable<TransactionDto> GetTransactions()
         {
-            return _context.Transactions;
+            var transactions = Mapper.Map<IEnumerable<TransactionDto>>(_context.Transactions.Include(s => s.Transactor).ToList());
+            return transactions;
         }
 
         // GET: api/Transactions/5
@@ -121,6 +125,36 @@ namespace GrKouk.Api.Controllers
         private bool TransactionExists(int id)
         {
             return _context.Transactions.Any(e => e.Id == id);
+        }
+
+        // GET: api/Transactions/GetTransactionsInPeriod?dateFrom=2018-12-01&dateTo=2018-12-31
+        //[Route("api/TransactionsInPeriod")]
+        [HttpGet("TransactionsInPeriod")]
+        public async Task<IActionResult> GetTransactionsInPeriod(DateTime fromDate, DateTime toDate)
+        {
+            if (fromDate==null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (toDate == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var transactions = Mapper.Map<IEnumerable<TransactionDto> >( await _context.Transactions.Where(m=>m.TransactionDate>=fromDate && m.TransactionDate<=toDate)
+                .Include(t=>t.Transactor)
+                .ToListAsync());
+
+            if (transactions == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(transactions);
         }
     }
 }

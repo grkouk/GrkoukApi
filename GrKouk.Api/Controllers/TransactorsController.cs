@@ -141,5 +141,29 @@ namespace GrKouk.Api.Controllers
 
             return Ok(transactors);
         }
+        // GET: api/TransactorsSearchList
+        [HttpGet("TransactorsSearchList")]
+        public async Task<IActionResult> TransactorsSearchList()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var transactorsList = await _context.Transactors
+                .Select(s=>new
+                {
+                    Name=s.Name,
+                    Key=s.Id
+                })
+                .ToListAsync();
+
+            if (transactorsList == null || transactorsList.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(transactorsList);
+        }
     }
 }

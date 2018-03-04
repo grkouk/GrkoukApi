@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using GrKouk.Api.Data;
+using GrKouk.Api.DTOs;
+using GrKouk.Api.Models;
 using GrKouk.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -90,7 +92,17 @@ namespace GrKouk.Api
 
             app.UseCors("AllowAllOrigins");
             app.UseIpRateLimiting();
-            
+
+            //Configure Automapper
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Transaction, TransactionDto>()
+                    .ForMember(dest => dest.TransactorName, opt => opt.MapFrom(src =>
+                        src.Transactor.Name
+                    ))
+                    .ForMember(dest => dest.AmountTotal,
+                        opt => opt.ResolveUsing(src => src.AmountFpa + src.AmountNet));
+            });
             app.UseMvc();
         }
     }

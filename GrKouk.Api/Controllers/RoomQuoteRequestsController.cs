@@ -108,6 +108,7 @@ namespace GrKouk.Api.Controllers
             var _message1 = $"Requester name {roomQuoteRequest.RequesterName} from {roomQuoteRequest.Country}";
             var _message2 = $"Quote for {roomQuoteRequest.RoomType} from {roomQuoteRequest.DateFrom} to {roomQuoteRequest.DateTo}";
             var _message3 = $"Adults = {roomQuoteRequest.Adults} children = {roomQuoteRequest.Children}";
+            _message3 += System.Environment.NewLine + $"Notes = {roomQuoteRequest.Notes}";
             var _message = _message1 + System.Environment.NewLine + _message2 + System.Environment.NewLine + _message3;
 
             await _emailSender.SendEmailAsync(roomQuoteRequest.RequesterEmail, _emailTo,_subject,_message);

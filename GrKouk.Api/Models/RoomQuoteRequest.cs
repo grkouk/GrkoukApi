@@ -34,5 +34,8 @@ namespace GrKouk.Api.Models
         [DataType(DataType.Date), Required]
         public DateTime DateTo { get; set; }
 
+        [MaxLength(150)]
+        public string Notes { get; set; }
+
     }
 }
