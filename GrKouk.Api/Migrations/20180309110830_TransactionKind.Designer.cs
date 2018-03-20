@@ -8,9 +8,10 @@ using GrKouk.Api.Data;
 namespace GrKouk.Api.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180309110830_TransactionKind")]
+    partial class TransactionKind
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
@@ -54,24 +55,6 @@ namespace GrKouk.Api.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("GrKouk.Api.Models.CostCentre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(15);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CostCentres");
-                });
-
             modelBuilder.Entity("GrKouk.Api.Models.Facility", b =>
                 {
                     b.Property<int>("Id")
@@ -91,24 +74,6 @@ namespace GrKouk.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Facilities");
-                });
-
-            modelBuilder.Entity("GrKouk.Api.Models.RevenueCentre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(15);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RevenueCentres");
                 });
 
             modelBuilder.Entity("GrKouk.Api.Models.RoomQuoteRequest", b =>
@@ -164,18 +129,12 @@ namespace GrKouk.Api.Migrations
 
                     b.Property<int>("CategoryId");
 
-                    b.Property<int>("CompanyId");
-
-                    b.Property<int>("CostCentreId");
-
                     b.Property<string>("Description")
                         .HasMaxLength(500);
 
                     b.Property<int>("Kind");
 
                     b.Property<string>("ReferenceCode");
-
-                    b.Property<int>("RevenueCentreId");
 
                     b.Property<byte[]>("Timestamp")
                         .IsConcurrencyToken()
@@ -188,12 +147,6 @@ namespace GrKouk.Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("CostCentreId");
-
-                    b.HasIndex("RevenueCentreId");
 
                     b.HasIndex("TransactionDate");
 
@@ -281,18 +234,6 @@ namespace GrKouk.Api.Migrations
                     b.HasOne("GrKouk.Api.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
-
-                    b.HasOne("GrKouk.Api.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.HasOne("GrKouk.Api.Models.CostCentre", "CostCentre")
-                        .WithMany()
-                        .HasForeignKey("CostCentreId");
-
-                    b.HasOne("GrKouk.Api.Models.RevenueCentre", "RevenueCentre")
-                        .WithMany()
-                        .HasForeignKey("RevenueCentreId");
 
                     b.HasOne("GrKouk.Api.Models.Transactor", "Transactor")
                         .WithMany()

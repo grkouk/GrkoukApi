@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GrKouk.Api.Data;
-using GrKouk.Api.DTOs;
+
 using GrKouk.Api.Models;
+using GrKouk.Api.Dtos;
 
 namespace GrKouk.Api.Controllers
 {
@@ -28,7 +29,14 @@ namespace GrKouk.Api.Controllers
         [HttpGet]
         public IEnumerable<TransactionDto> GetTransactions()
         {
-            var transactions = Mapper.Map<IEnumerable<TransactionDto>>(_context.Transactions.Include(s => s.Transactor).ToList());
+            var transactions = Mapper.Map<IEnumerable<TransactionDto>>(
+                _context.Transactions
+                    .Include(s => s.Transactor)
+                    .Include(t=>t.Category)
+                    .Include(t=>t.Company)
+                    .Include(t=>t.CostCentre)
+                    .Include(t=>t.RevenueCentre)
+                    .ToList());
             return transactions;
         }
 
@@ -88,17 +96,48 @@ namespace GrKouk.Api.Controllers
 
         // POST: api/Transactions
         [HttpPost]
-        public async Task<IActionResult> PostTransaction([FromBody] Transaction transaction)
+        public async Task<IActionResult> PostTransaction([FromBody] TransactionCreateDto transactionCreateDto)
         {
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var entityToMap = Mapper.Map<Transaction>(transactionCreateDto);
+                _context.Transactions.Add(entityToMap);
+                await _context.SaveChangesAsync();
+                if (entityToMap.Transactor==null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.Transactor).Load();
+                }
+                if (entityToMap.Category == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.Category).Load();
+                }
+                if (entityToMap.Company == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.Company).Load();
+                }
+                if (entityToMap.CostCentre == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.CostCentre).Load();
+                }
+                if (entityToMap.RevenueCentre == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.RevenueCentre).Load();
+                }
+                var entityToReturn = Mapper.Map<TransactionDto>(entityToMap);
+                return CreatedAtAction("GetTransaction", new { id = entityToMap.Id },entityToReturn );
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
-            return CreatedAtAction("GetTransaction", new { id = transaction.Id }, transaction);
+            
         }
 
         // DELETE: api/Transactions/5
@@ -145,8 +184,15 @@ namespace GrKouk.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var transactions = Mapper.Map<IEnumerable<TransactionDto> >( await _context.Transactions.Where(m=>m.TransactionDate>=fromDate && m.TransactionDate<=toDate)
-                .Include(t=>t.Transactor)
+
+           // DateTime tDate=
+
+            var transactions = Mapper.Map<IEnumerable<TransactionDto> >( await _context.Transactions.Where(m=>m.TransactionDate>=fromDate && m.TransactionDate<=toDate )
+                .Include(s => s.Transactor)
+                .Include(t => t.Category)
+                .Include(t => t.Company)
+                .Include(t => t.CostCentre)
+                .Include(t => t.RevenueCentre)
                 .ToListAsync());
 
             if (transactions == null)

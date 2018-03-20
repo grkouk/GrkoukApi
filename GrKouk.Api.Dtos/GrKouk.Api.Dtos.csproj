@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <Authors>George Koukoudis</Authors>
+    <Version>1.5.0</Version>
+    <Copyright>George Koukoudis</Copyright>
+  </PropertyGroup>
+
+</Project>

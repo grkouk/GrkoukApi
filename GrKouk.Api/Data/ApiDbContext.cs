@@ -21,19 +21,44 @@ namespace GrKouk.Api.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Transactor> Transactors { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        //Προσθήκες 20/2/2018
+        public DbSet<RevenueCentre> RevenueCentres { get; set; }
+        public DbSet<CostCentre> CostCentres { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            #region "Cascading Deletes prevention"
+            modelBuilder.Entity<Transaction>().HasIndex(c => c.TransactionDate);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(c => c.Category)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Category>().HasIndex(c => c.Code);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(en => en.Transactor)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion
+            modelBuilder.Entity<Transaction>()
+                .HasOne(en => en.Company)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(en => en.CostCentre)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(en => en.RevenueCentre)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

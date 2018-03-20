@@ -150,7 +150,7 @@ namespace GrKouk.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var transactorsList = await _context.Transactors
+            var transactorsList = await _context.Transactors.OrderBy(p=>p.Name)
                 .Select(s=>new
                 {
                     Name=s.Name,

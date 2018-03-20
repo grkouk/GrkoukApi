@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using GrKouk.Api.Data;
-using GrKouk.Api.DTOs;
+using GrKouk.Api.Dtos;
 using GrKouk.Api.Models;
 using GrKouk.Api.Services;
 using Microsoft.AspNetCore.Builder;
@@ -100,8 +100,13 @@ namespace GrKouk.Api
                     .ForMember(dest => dest.TransactorName, opt => opt.MapFrom(src =>
                         src.Transactor.Name
                     ))
+                    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                    .ForMember(dest=>dest.CompanyName, opt=>opt.MapFrom(src=>src.Company.Name))
+                    .ForMember(dest => dest.CostCentreName, opt => opt.MapFrom(src => src.CostCentre.Name))
+                    .ForMember(dest => dest.RevenueCentreName, opt => opt.MapFrom(src => src.RevenueCentre.Name))
                     .ForMember(dest => dest.AmountTotal,
                         opt => opt.ResolveUsing(src => src.AmountFpa + src.AmountNet));
+                cfg.CreateMap<Transaction, TransactionCreateDto>().ReverseMap();
             });
             app.UseMvc();
         }

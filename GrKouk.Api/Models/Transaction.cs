@@ -22,11 +22,29 @@ namespace GrKouk.Api.Models
         public int TransactorId { get; set; }
         public Transactor Transactor { get; set; }
 
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+
+        public int CompanyId { get; set; }
+        public Company Company { get; set; }
+
+        public int CostCentreId { get; set; }
+        public CostCentre CostCentre { get; set; }
+
+        public int RevenueCentreId { get; set; }
+        public RevenueCentre RevenueCentre { get; set; }
+
         /// <summary>
         /// Αιτιολογία Κίνησης
         /// </summary>
         [MaxLength(500)]
         public string Description { get; set; }
+        /// <summary>
+        /// Transaction Kind 1=Exprence
+        /// 2=Income
+        /// </summary>
+        public int Kind { get; set; }
+
         /// <summary>
         /// Ποσό ΦΠΑ
         /// </summary>
