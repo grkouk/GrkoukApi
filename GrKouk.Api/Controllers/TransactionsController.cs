@@ -61,33 +61,58 @@ namespace GrKouk.Api.Controllers
 
         // PUT: api/Transactions/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction([FromRoute] int id, [FromBody] Transaction transaction)
+        public async Task<IActionResult> PutTransaction([FromRoute] int id, [FromBody] TransactionModifyDto transactionModifyDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != transaction.Id)
+            if (id != transactionModifyDto.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(transaction).State = EntityState.Modified;
+            var entityToMap = Mapper.Map<Transaction>(transactionModifyDto);
+            _context.Entry(entityToMap).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+
+                #region Refresh
+                if (entityToMap.Transactor == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.Transactor).Load();
+                }
+                if (entityToMap.Category == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.Category).Load();
+                }
+                if (entityToMap.Company == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.Company).Load();
+                }
+                if (entityToMap.CostCentre == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.CostCentre).Load();
+                }
+                if (entityToMap.RevenueCentre == null)
+                {
+                    _context.Entry(entityToMap).Reference(p => p.RevenueCentre).Load();
+                }
+                #endregion
+                var entityToReturn = Mapper.Map<TransactionModifyDto>(entityToMap);
+                return Ok(entityToReturn);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
                 if (!TransactionExists(id))
                 {
-                    return NotFound();
+                    return NotFound(e.ToString());
                 }
                 else
                 {
-                    throw;
+                    throw e;
                 }
             }
 

@@ -7,7 +7,7 @@
     <Company>GrKouk</Company>
     <Description>API for various products</Description>
     <Copyright>GrKouk</Copyright>
-    <Version>1.5.0</Version>
+    <Version>1.5.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

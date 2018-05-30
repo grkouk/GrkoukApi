@@ -107,6 +107,7 @@ namespace GrKouk.Api
                     .ForMember(dest => dest.AmountTotal,
                         opt => opt.ResolveUsing(src => src.AmountFpa + src.AmountNet));
                 cfg.CreateMap<Transaction, TransactionCreateDto>().ReverseMap();
+                cfg.CreateMap<Transaction, TransactionModifyDto>().ReverseMap();
             });
             app.UseMvc();
         }

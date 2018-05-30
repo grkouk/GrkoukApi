@@ -11,57 +11,57 @@ using GrKouk.Api.Models;
 namespace GrKouk.Api.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Companies")]
-    public class CompaniesController : Controller
+    [Route("api/CostCentres")]
+    public class CostCentresController : Controller
     {
         private readonly ApiDbContext _context;
 
-        public CompaniesController(ApiDbContext context)
+        public CostCentresController(ApiDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Companies
+        // GET: api/CostCentres
         [HttpGet]
-        public IEnumerable<Company> GetCompanies()
+        public IEnumerable<CostCentre> GetCostCentres()
         {
-            return _context.Companies;
+            return _context.CostCentres;
         }
 
-        // GET: api/Companies/5
+        // GET: api/CostCentres/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCompany([FromRoute] int id)
+        public async Task<IActionResult> GetCostCentre([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var company = await _context.Companies.SingleOrDefaultAsync(m => m.Id == id);
+            var costCentre = await _context.CostCentres.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (company == null)
+            if (costCentre == null)
             {
                 return NotFound();
             }
 
-            return Ok(company);
+            return Ok(costCentre);
         }
 
-        // PUT: api/Companies/5
+        // PUT: api/CostCentres/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCompany([FromRoute] int id, [FromBody] Company company)
+        public async Task<IActionResult> PutCostCentre([FromRoute] int id, [FromBody] CostCentre costCentre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != company.Id)
+            if (id != costCentre.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(company).State = EntityState.Modified;
+            _context.Entry(costCentre).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace GrKouk.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CompanyExists(id))
+                if (!CostCentreExists(id))
                 {
                     return NotFound();
                 }
@@ -82,56 +82,56 @@ namespace GrKouk.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Companies
+        // POST: api/CostCentres
         [HttpPost]
-        public async Task<IActionResult> PostCompany([FromBody] Company company)
+        public async Task<IActionResult> PostCostCentre([FromBody] CostCentre costCentre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Companies.Add(company);
+            _context.CostCentres.Add(costCentre);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCompany", new { id = company.Id }, company);
+            return CreatedAtAction("GetCostCentre", new { id = costCentre.Id }, costCentre);
         }
 
-        // DELETE: api/Companies/5
+        // DELETE: api/CostCentres/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompany([FromRoute] int id)
+        public async Task<IActionResult> DeleteCostCentre([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var company = await _context.Companies.SingleOrDefaultAsync(m => m.Id == id);
-            if (company == null)
+            var costCentre = await _context.CostCentres.SingleOrDefaultAsync(m => m.Id == id);
+            if (costCentre == null)
             {
                 return NotFound();
             }
 
-            _context.Companies.Remove(company);
+            _context.CostCentres.Remove(costCentre);
             await _context.SaveChangesAsync();
 
-            return Ok(company);
+            return Ok(costCentre);
         }
 
-        private bool CompanyExists(int id)
+        private bool CostCentreExists(int id)
         {
-            return _context.Companies.Any(e => e.Id == id);
+            return _context.CostCentres.Any(e => e.Id == id);
         }
-        // GET: api/CompaniesSearchList
-        [HttpGet("CompaniesSearchList")]
-        public async Task<IActionResult> CompaniesSearchList()
+        // GET: api/CostCentreSearchList
+        [HttpGet("CostCentreSearchList")]
+        public async Task<IActionResult> CostCentreSearchList()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var companySearchList = await _context.Companies.OrderBy(p => p.Name)
+            var costCentreList = await _context.CostCentres.OrderBy(p => p.Name)
                 .Select(s => new
                 {
                     Name = s.Name,
@@ -139,12 +139,12 @@ namespace GrKouk.Api.Controllers
                 })
                 .ToListAsync();
 
-            if (companySearchList == null || companySearchList.Count == 0)
+            if (costCentreList == null || costCentreList.Count == 0)
             {
                 return NotFound();
             }
 
-            return Ok(companySearchList);
+            return Ok(costCentreList);
         }
     }
 }
